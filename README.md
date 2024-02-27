@@ -11,13 +11,17 @@
 
 ## Install Mysql on Ubuntu 18.04 LTS
 
-`$ sudo apt get update`
-`$ sudo apt install mysql-server mysql-client -y`
+```
+$ sudo apt get update
+$ sudo apt install mysql-server mysql-client -y
+```
 
 ## Uninstall Mysql on Ubuntu 18.04 LTS
 
-`$ sudo apt purge mysql*`
-`$ sudo apt autoremove`
+```
+$ sudo apt purge mysql*
+$ sudo apt autoremove
+```
 
 ## Step 1 - Installing Mysql
 
@@ -27,76 +31,81 @@ Install mysql on Master Host and all Slave Host
 
 Change default (localhost) root password and plugin :
 
-`$ sudo mysql`
-
-`mysql> USE mysql;`
-`mysql> UPDATE user SET plugin='mysql_native_password' WHERE User='root';`
-`mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'new-password';`
-`mysql> FLUSH PRIVILEGES;`
-`mysql> exit;`
+```
+$ sudo mysql
+mysql> USE mysql;
+mysql> UPDATE user SET plugin='mysql_native_password' WHERE User='root';
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'new-password';
+mysql> FLUSH PRIVILEGES;
+mysql> exit;
+```
 
 Create new root user for remote access :
 
-`$ sudo mysql`
-`mysql> USE mysql;`
-`mysql> CREATE USER 'root'@'%' IDENTIFIED BY 'YOUR_PASSWD';`
-`mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';`
-`mysql> FLUSH PRIVILEGES;`
-`mysql> exit;`
+```
+$ sudo mysql
+mysql> USE mysql;
+mysql> CREATE USER 'root'@'%' IDENTIFIED BY 'YOUR_PASSWD';
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
+mysql> FLUSH PRIVILEGES;
+mysql> exit;
+```
 
 Run `mysql_secure_installation` :
 
-`$ mysql_secure_installation`
+```
+$ mysql_secure_installation
     
-    Enter password for user root: 
-    
-    VALIDATE PASSWORD PLUGIN can be used to test passwords
-    and improve security. It checks the strength of password
-    and allows the users to set only those passwords which are
-    secure enough. Would you like to setup VALIDATE PASSWORD plugin?
-    
-    Press y|Y for Yes, any other key for No: n
-    Using existing password for root.
-    Change the password for root ? ((Press y|Y for Yes, any other key for No) : Y
-    
-    New password: 
-    
-    Re-enter new password: 
-    By default, a MySQL installation has an anonymous user,
-    allowing anyone to log into MySQL without having to have
-    a user account created for them. This is intended only for
-    testing, and to make the installation go a bit smoother.
-    You should remove them before moving into a production
-    environment.
-    
-    Remove anonymous users? (Press y|Y for Yes, any other key for No) : n
-    
-     ... skipping.
-    
-    
-    Normally, root should only be allowed to connect from
-    'localhost'. This ensures that someone cannot guess at
-    the root password from the network.
-    
-    Disallow root login remotely? (Press y|Y for Yes, any other key for No) : n
-    
-     ... skipping.
-    By default, MySQL comes with a database named 'test' that
-    anyone can access. This is also intended only for testing,
-    and should be removed before moving into a production
-    environment.
-    
-    
-    Remove test database and access to it? (Press y|Y for Yes, any other key for No) : n
-    
-     ... skipping.
-    Reloading the privilege tables will ensure that all changes
-    made so far will take effect immediately.
-    
-    Reload privilege tables now? (Press y|Y for Yes, any other key for No) : Y
-    Success.
-    
-    All done!
+Enter password for user root: 
+
+VALIDATE PASSWORD PLUGIN can be used to test passwords
+and improve security. It checks the strength of password
+and allows the users to set only those passwords which are
+secure enough. Would you like to setup VALIDATE PASSWORD plugin?
+
+Press y|Y for Yes, any other key for No: n
+Using existing password for root.
+Change the password for root ? ((Press y|Y for Yes, any other key for No) : Y
+
+New password: 
+
+Re-enter new password: 
+By default, a MySQL installation has an anonymous user,
+allowing anyone to log into MySQL without having to have
+a user account created for them. This is intended only for
+testing, and to make the installation go a bit smoother.
+You should remove them before moving into a production
+environment.
+
+Remove anonymous users? (Press y|Y for Yes, any other key for No) : n
+
+ ... skipping.
+
+
+Normally, root should only be allowed to connect from
+'localhost'. This ensures that someone cannot guess at
+the root password from the network.
+
+Disallow root login remotely? (Press y|Y for Yes, any other key for No) : n
+
+ ... skipping.
+By default, MySQL comes with a database named 'test' that
+anyone can access. This is also intended only for testing,
+and should be removed before moving into a production
+environment.
+
+
+Remove test database and access to it? (Press y|Y for Yes, any other key for No) : n
+
+ ... skipping.
+Reloading the privilege tables will ensure that all changes
+made so far will take effect immediately.
+
+Reload privilege tables now? (Press y|Y for Yes, any other key for No) : Y
+Success.
+
+All done!
+```
 
 Edit mysql config at `/etc/mysql/mysql.conf.d/mysqld.cnf` :
 
@@ -120,35 +129,39 @@ Enable replication config by editing `/etc/mysql/mysql.conf.d/mysqld.cnf` :
 
 On Master Node :
 
-`server-id=1`
-`log_bin=/var/log/mysql/mysql-bin.log`
-`log_slave_updates=1`
-`report-host={MASTER_HOSTNAME}`
-`report-port=3306`
-`master-info-repository=TABLE`
+```
+server-id=1
+log_bin=/var/log/mysql/mysql-bin.log
+log_slave_updates=1
+report-host={MASTER_HOSTNAME}
+report-port=3306
+master-info-repository=TABLE
+```
  
  change `{MASTER_HOSTNAME}` with your vm master hostname
  
  On Slave 1 Node :
- 
- `server-id=2`
- `log_bin=/var/log/mysql/mysql-bin.log`
- `log_slave_updates=1`
- `report-host={SLAVE1_HOSTNAME}`
- `report-port=3306`
- `master-info-repository=TABLE`
- 
+
+ ```
+ server-id=2
+ log_bin=/var/log/mysql/mysql-bin.log
+ log_slave_updates=1
+ report-host={SLAVE1_HOSTNAME}
+ report-port=3306
+ master-info-repository=TABLE
+ ```
  change `{SLAVE1_HOSTNAME}` with your vm slave1 hostname
 
  On Slave 2 Node :
- 
- `server-id=3`
- `log_bin=/var/log/mysql/mysql-bin.log`
- `log_slave_updates=1`
- `report-host={SLAVE2_HOSTNAME}`
- `report-port=3306`
- `master-info-repository=TABLE`
- 
+
+ ```
+ server-id=3
+ log_bin=/var/log/mysql/mysql-bin.log
+ log_slave_updates=1
+ report-host={SLAVE2_HOSTNAME}
+ report-port=3306
+ master-info-repository=TABLE
+ ```
  change `{SLAVE2_HOSTNAME}` with your vm slave2 hostname
 
  Next, restart mysql service :
@@ -156,12 +169,14 @@ On Master Node :
  `$ sudo service mysql restart`
  
  Now create user for replication on master node :
- 
- `$ sudo mysql -uroot -p`
- `mysql> CREATE USER 'slave'@'%' IDENTIFIED BY 'SLAVE_PASSWORD';`
- `mysql> GRANT REPLICATION SLAVE ON *.* TO 'slave'@'SLAVE_IP_ADDRESS';`
- `mysql> FLUSH PRIVILEGES`
- 
+
+ ```
+ $ sudo mysql -uroot -p
+ mysql> CREATE USER 'slave'@'%' IDENTIFIED BY 'SLAVE_PASSWORD';
+ mysql> GRANT REPLICATION SLAVE ON *.* TO 'slave'@'SLAVE_IP_ADDRESS';
+ mysql> FLUSH PRIVILEGES
+ ```
+
  Next, turn on the lock on your databases to prevent the change in data.
  
  `mysql> FLUSH TABLES WITH READ LOCK;`
@@ -183,8 +198,10 @@ Next backup data on master node :
 
 Transfer dump sql to slave nodes :
 
-`scp data.sql root@192.168.100.19:~`
-`scp data.sql root@192.168.100.20:~`
+```
+scp data.sql root@192.168.100.19:~
+scp data.sql root@192.168.100.20:~
+```
 
 To migrate the file, you will have to enter the SSH password of slave. After migration is done, Unlock tables on master.
 
@@ -196,8 +213,10 @@ Import dump sql on slave nodes :
 
 Once the data is imported, Login to MySQL in slave and stop the slave using following command.
 
-`$ sudo mysql -uroot -p;`
-`mysql> STOP SLAVE;`
+```
+$ sudo mysql -uroot -p;
+mysql> STOP SLAVE;
+```
 
 Now we can change the master so that our slave can know which server to replicate. Update master information using the following command in MySQL.
 
@@ -217,33 +236,40 @@ After executing the command, Start slave by using the `START SLAVE` command on t
 
 Create database on your master node :
 
-`$ sudo mysql -uroot -p`
-`mysql> CREATE DATABASE test;`
+```
+$ sudo mysql -uroot -p
+mysql> CREATE DATABASE test;
+```
 
 Now, Open up MySQL command line interface on your slave server and check if the new database exist. To get the list of database, execute the following command on slave.
 
-`$ sudo mysql -uroot -p`
-`mysql> SHOW DATABASES;`
+```
+$ sudo mysql -uroot -p
+mysql> SHOW DATABASES;
+```
 
 In the list, you must see a database named “test”. If you can see the database, MySQL replication is working. If not, Replication is not working. In that case, you can follow the guide from start again.
 
 ## Step 5 - Installing Orchestrator
 
-`$ curl -s https://packagecloud.io/install/repositories/github/orchestrator/script.deb.sh | sudo bash`
-
-`$ sudo apt update`
-`$ sudo apt install orchestrator -y`
+```
+$ curl -s https://packagecloud.io/install/repositories/github/orchestrator/script.deb.sh | sudo bash
+$ sudo apt update
+$ sudo apt install orchestrator -y
+```
 
 Setup a MySQL server for backend, and invoke the following :
 
-`$ sudo apt update`
-`$ sudo apt install mysql-server mysql-client -y`
-`$ sudo mysql`
-`mysql> CREATE DATABASE IF NOT EXISTS orchestrator;`
-`mysql> CREATE USER 'orchestrator'@'127.0.0.1' IDENTIFIED BY 'orch_backend_password';`
-`mysql> GRANT ALL PRIVILEGES ON 'orchestrator'.* TO 'orchestrator'@'127.0.0.1';`
-`mysql> FLUSH PRIVILEGES;`
-`mysql> exit;`
+```
+$ sudo apt update
+$ sudo apt install mysql-server mysql-client -y
+$ sudo mysql
+mysql> CREATE DATABASE IF NOT EXISTS orchestrator;
+mysql> CREATE USER 'orchestrator'@'127.0.0.1' IDENTIFIED BY 'orch_backend_password';
+mysql> GRANT ALL PRIVILEGES ON 'orchestrator'.* TO 'orchestrator'@'127.0.0.1';
+mysql> FLUSH PRIVILEGES;
+mysql> exit;
+```
 
 Create Orchestrator config file by copying from template :
 
@@ -265,12 +291,14 @@ Edit config and configure with following config :
 
 Next, create user for orchestrator on master node :
 
-`$ sudo mysql -uroot -p`
-`mysql> CREATE USER 'orchestrator'@'%' IDENTIFIED BY 'orch_topology_password';`
-`mysql> GRANT SUPER, PROCESS, REPLICATION SLAVE, RELOAD ON *.* TO 'orchestrator'@'%';`
-`mysql> GRANT SELECT ON mysql.slave_master_info TO 'orchestrator'@'%';`
-`mysql> FLUSH PRIVILEGES;`
-`mysql> exit;`
+```
+$ sudo mysql -uroot -p
+mysql> CREATE USER 'orchestrator'@'%' IDENTIFIED BY 'orch_topology_password';
+mysql> GRANT SUPER, PROCESS, REPLICATION SLAVE, RELOAD ON *.* TO 'orchestrator'@'%';
+mysql> GRANT SELECT ON mysql.slave_master_info TO 'orchestrator'@'%';
+mysql> FLUSH PRIVILEGES;
+mysql> exit;
+```
 
 Back to orchestrator node and edit config file :
 
@@ -285,8 +313,10 @@ Back to orchestrator node and edit config file :
 
 Now start orchestrator service :
 
-`$ sudo service orchestrator start`
-`$ sudo systemctl enable orchestrator`
+```
+$ sudo service orchestrator start
+$ sudo systemctl enable orchestrator
+```
 
 Then access web interface in the browser with following url :
 
@@ -297,9 +327,11 @@ http://192.168.100.25:3000
 
 If you get warning `NoLoggingReplicasStructureWarning` or `NoFailoverSupportStructureWarning` then edit mysql config and add following params on master and slave nodes :
 
-`$ sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf`
-`gtid_mode=ON`
-`enforce-gtid-consistency=ON`
+```
+$ sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+gtid_mode=ON
+enforce-gtid-consistency=ON
+```
 
 Restart mysql
 
@@ -309,12 +341,14 @@ then if you get warning `ErrantGTIDStructureWarning` just click icon on topology
 
 ## Step 6 - Installing ProxySQL
 
-`$ sudo apt-get install -y --no-install-recommends lsb-release wget apt-transport-https ca-certificates gnupg`
-`$ sudo wget -O - 'https://repo.proxysql.com/ProxySQL/proxysql-2.5.x/repo_pub_key' | apt-key add -`
-`# echo deb https://repo.proxysql.com/ProxySQL/proxysql-2.5.x/$(lsb_release -sc)/ ./ | tee /etc/apt/sources.list.d/proxysql.list`
-`$ wget -nv -O /etc/apt/trusted.gpg.d/proxysql-2.5.x-keyring.gpg 'https://repo.proxysql.com/ProxySQL/proxysql-2.5.x/repo_pub_key.gpg'`
-`$ sudo apt get update`
-`$ sudo apt-get install proxysql`
+```
+$ sudo apt-get install -y --no-install-recommends lsb-release wget apt-transport-https ca-certificates gnupg
+$ sudo wget -O - 'https://repo.proxysql.com/ProxySQL/proxysql-2.5.x/repo_pub_key' | apt-key add -'
+# echo deb https://repo.proxysql.com/ProxySQL/proxysql-2.5.x/$(lsb_release -sc)/ ./ | tee /etc/apt/sources.list.d/proxysql.list
+$ wget -nv -O /etc/apt/trusted.gpg.d/proxysql-2.5.x-keyring.gpg 'https://repo.proxysql.com/ProxySQL/proxysql-2.5.x/repo_pub_key.gpg'
+$ sudo apt get update
+$ sudo apt-get install proxysql
+```
 
 Check current installation proxysql version :
 
