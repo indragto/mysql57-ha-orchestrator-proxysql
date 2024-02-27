@@ -322,8 +322,7 @@ Then access web interface in the browser with following url :
 
 http://192.168.100.25:3000
 
-
-![Screenshot 2024-02-28 at 00.08.53]([media/17090461149371/Screenshot%202024-02-28%20at%2000.08.53.png](https://github.com/indragto/mysql57-ha-orchestrator-proxysql/blob/main/Screenshot%202024-02-28%20at%2000.08.53.png))
+![alt text](https://github.com/indragto/mysql57-ha-orchestrator-proxysql/blob/main/Screenshot%202024-02-28%20at%2000.08.53.png?raw=true)
 
 If you get warning `NoLoggingReplicasStructureWarning` or `NoFailoverSupportStructureWarning` then edit mysql config and add following params on master and slave nodes :
 
