@@ -173,7 +173,7 @@ master-info-repository=TABLE
  ```
  $ sudo mysql -uroot -p
  mysql> CREATE USER 'slave'@'%' IDENTIFIED BY 'SLAVE_PASSWORD';
- mysql> GRANT REPLICATION SLAVE ON *.* TO 'slave'@'SLAVE_IP_ADDRESS';
+ mysql> GRANT REPLICATION SLAVE ON *.* TO 'slave'@'%';
  mysql> FLUSH PRIVILEGES
  ```
 
